@@ -28,38 +28,66 @@ class _TimerSamplePageState extends State<TimerSamplePage> {
   Widget build(BuildContext context) {
     // setState() の度に実行される
     return Scaffold(
+        appBar: AppBar(title: const Text('資格勉強アプリ')),
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Text(
-        DateFormat.Hms().format(_time),
-        style: Theme.of(context).textTheme.headline2,
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              // Stopボタンタップ時の処理
-              if (_timer != null && _timer.isActive) _timer.cancel();
-            },
-            child: Text("Stop"),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return SecondPage();
+                  }),
+                );
+              },
+              child: Text('次のページへ'),
+            ),
           ),
-          FloatingActionButton(
-            onPressed: () {
-              // Startボタンタップ時の処理
-              _timer = Timer.periodic(
-                Duration(seconds: 1), // 1秒毎に定期実行
-                (Timer timer) {
-                  setState(() {
-                    // 変更を画面に反映するため、setState()している
-                    _time = _time.add(Duration(seconds: 1));
-                  });
+          Text(
+            DateFormat.Hms().format(_time),
+            style: Theme.of(context).textTheme.headline2,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  // Stopボタンタップ時の処理
+                  if (_timer != null && _timer.isActive) _timer.cancel();
                 },
-              );
-            },
-            child: Text("Start"),
-          ),
-        ],
-      )
-    ]));
+                child: Text("Stop"),
+              ),
+              FloatingActionButton(
+                onPressed: () {
+                  // Startボタンタップ時の処理
+                  _timer = Timer.periodic(
+                    Duration(seconds: 1), // 1秒毎に定期実行
+                    (Timer timer) {
+                      setState(() {
+                        // 変更を画面に反映するため、setState()している
+                        _time = _time.add(Duration(seconds: 1));
+                      });
+                    },
+                  );
+                },
+                child: Text("Start"),
+              ),
+            ],
+          )
+        ]));
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('次のページ')),
+        body: Center(
+          child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('戻る')),
+        ));
   }
 }
