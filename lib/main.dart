@@ -1,93 +1,53 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:prj_study_timer_flutter/timer/timer_ui.dart';
 
-void main() {
-  runApp(MaterialApp(home: TimerSamplePage())); // ここが Widget ツリーの起点
-}
+void main() => runApp(TimerApp());
 
-class TimerSamplePage extends StatefulWidget {
-  // 状態を持ちたいので StatefulWidget を継承
-  @override
-  _TimerSamplePageState createState() => _TimerSamplePageState();
-}
-
-class _TimerSamplePageState extends State<TimerSamplePage> {
-  late Timer _timer; // この辺が状態
-  late DateTime _time;
-
-  @override
-  void initState() {
-    // 初期化処理
-    _time = DateTime.utc(0, 0, 0);
-    super.initState();
-  }
+class TimerApp extends StatelessWidget {
+  final titleText = 'timerapp';
 
   @override
   Widget build(BuildContext context) {
-    // setState() の度に実行される
+    return MaterialApp(
+      home: Home(titleText: titleText),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  final String? titleText;
+  const Home({this.titleText});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('資格勉強アプリ')),
-        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
+      appBar: AppBar(
+        title: const Text('資格アプリ'),
+      ),
+      body: ListView(
+        children: <Widget>[
+          Card(
+            // 10, 25, 60, 120, 240分の5つをセットする
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) {
-                    return SecondPage();
-                  }),
+                  MaterialPageRoute(builder: (context) => SecondRoute(10)),
                 );
               },
-              child: Text('次のページへ'),
+              child: ListTile(
+                contentPadding: EdgeInsets.fromLTRB(30, 30, 30, 30),
+                title: Text(
+                  '10分タイマー',
+                  style: TextStyle(fontSize: 30),
+                ),
+                trailing: Icon(Icons.arrow_forward_ios),
+              ),
             ),
           ),
-          Text(
-            DateFormat.Hms().format(_time),
-            style: Theme.of(context).textTheme.headline2,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FloatingActionButton(
-                onPressed: () {
-                  // Stopボタンタップ時の処理
-                  if (_timer != null && _timer.isActive) _timer.cancel();
-                },
-                child: Text("Stop"),
-              ),
-              FloatingActionButton(
-                onPressed: () {
-                  // Startボタンタップ時の処理
-                  _timer = Timer.periodic(
-                    Duration(seconds: 1), // 1秒毎に定期実行
-                    (Timer timer) {
-                      setState(() {
-                        // 変更を画面に反映するため、setState()している
-                        _time = _time.add(Duration(seconds: 1));
-                      });
-                    },
-                  );
-                },
-                child: Text("Start"),
-              ),
-            ],
-          )
-        ]));
-  }
-}
-
-class SecondPage extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('次のページ')),
-        body: Center(
-          child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('戻る')),
-        ));
+        ],
+      ),
+    );
   }
 }
